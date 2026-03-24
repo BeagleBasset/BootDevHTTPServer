@@ -1,10 +1,18 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
 
 func main() {
 	// Create a new ServeMux
 	serveMux := http.NewServeMux()
+
+	// Create a file server handler
+	fileServer := http.FileServer(http.Dir("."))
+
+	// Register handler for root path
+	serveMux.Handle("/", fileServer)
 
 	// Create a new Server
 	server := http.Server{
@@ -15,5 +23,3 @@ func main() {
 	// Start the server
 	server.ListenAndServe()
 }
-
-
