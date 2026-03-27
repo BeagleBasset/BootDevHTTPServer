@@ -40,6 +40,7 @@ type ErrorResponse struct {
 	Error string `json:"error"`
 }
 
-type Email struct {
-	Email string `json:"email"`
+type NewUser struct {
+	Email 		string `json:"email"`
+	Password	string `json:"password"`
 }
