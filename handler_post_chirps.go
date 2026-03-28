@@ -6,6 +6,7 @@ import (
 	"errors"
 
     "github.com/BeagleBasset/BootDevHTTPServer/internal/database"
+    "github.com/BeagleBasset/BootDevHTTPServer/internal/auth"
 )
 
 func cleanResponse(message string) string {
@@ -44,6 +45,17 @@ func (cfg *apiConfig) handlerChirps(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token, err := auth.GetBearerToken(r.Header)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Error with token:", err)
+		return
+	}
+	userID, err := auth.ValidateJWT(token, cfg.jwtSecret)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Error with userId:", err)
+		return
+	}
+
 	chirp, err := validateChirp(params.Body)
 	if err != nil {
 		respondWithError(w, 500, "Error in chirp validation:", err)
@@ -52,7 +64,7 @@ func (cfg *apiConfig) handlerChirps(w http.ResponseWriter, r *http.Request) {
 	
 	dbChirp, err := cfg.dbQueries.CreateChirp(r.Context(), database.CreateChirpParams{
 		Body:   chirp,
-		UserID: params.UserID,
+		UserID: userID,
 	})
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "Error in query:", err)
@@ -67,5 +79,5 @@ func (cfg *apiConfig) handlerChirps(w http.ResponseWriter, r *http.Request) {
 		UserID:		dbChirp.UserID,
 	}
 
-	respondWithJSON(w, 200, resp)
+	respondWithJSON(w, 201, resp)
 }

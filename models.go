@@ -13,6 +13,7 @@ type apiConfig struct {
 	fileserverHits 	atomic.Int32
 	dbQueries      	*database.Queries
 	platform		string
+	jwtSecret		string
 }
 
 // Chirp struct, for chirp JSON respons
@@ -26,7 +27,6 @@ type Chirp struct {
 
 type NewChirp struct {
 	Body string `json:"body"`
-	UserID uuid.UUID `json:"user_id"`
 }
 
 type User struct {
@@ -41,6 +41,6 @@ type ErrorResponse struct {
 }
 
 type NewUser struct {
-	Email 		string `json:"email"`
-	Password	string `json:"password"`
+	Email 				string `json:"email"`
+	Password			string `json:"password"`
 }
