@@ -14,6 +14,7 @@ type apiConfig struct {
 	dbQueries      	*database.Queries
 	platform		string
 	jwtSecret		string
+	polkaKey		string
 }
 
 // Chirp struct, for chirp JSON respons
@@ -34,6 +35,7 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Email     string    `json:"email"`
+	IsChirpyRed bool    `json:"is_chirpy_red"`
 }
 
 type ErrorResponse struct {
